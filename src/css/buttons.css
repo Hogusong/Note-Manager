@@ -1,0 +1,15 @@
+.buttons {
+  font-size: 18px;
+  margin-left: 22vw
+}
+
+.buttons button {  
+  margin-left: 40px;
+  background: gray;
+  border: none
+}
+
+.buttons button:hover {
+  background: rgb(159, 238, 24);
+  color: black
+}
