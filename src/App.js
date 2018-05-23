@@ -13,7 +13,7 @@ class App extends Component {
     this.state = {
       notes: localNotes ? localNotes : [],
       selectedId: '',
-      currentBody: ''
+      currentBody: 'New note ...'
     }
 
     this.addNote = this.addNote.bind(this);
@@ -24,7 +24,7 @@ class App extends Component {
   }
 
   addNote() {
-
+    this.setState({ selectedId: '', currentBody: 'New note ...' });
   }
 
   updateNote(body) {
@@ -35,6 +35,8 @@ class App extends Component {
   save() {
     let body = this.state.currentBody.trim();
     if (body.length === 0)  return;
+    if (body === "New note ...") return;
+
     let newNotes = this.state.notes;
     if(this.state.selectedId) {
       const noteIndex = this.state.notes.findIndex(note => 
@@ -47,20 +49,31 @@ class App extends Component {
       const newNote = { id: guid, body: this.state.currentBody }
       newNotes.push(newNote);
     }
-    this.setState({ 
-      notes: newNotes,
-      selectedId: '', 
-      currentBody: ''
-    });
-    localStorage.setItem(KEY, JSON.stringify(this.state.notes));
+    this.processChanged(newNotes);
   }
 
   delete() {
+    let newNotes = this.state.notes;
+    if(this.state.selectedId) {
+      const noteIndex = newNotes.findIndex(note => 
+              (note.id === this.state.selectedId)
+      );
+      if (noteIndex === -1) return;
+      newNotes.splice(noteIndex, 1)
+    }
 
+    this.processChanged(newNotes);
   }
 
   selectNote(note) {
     this.setState({ selectedId: note.id,  currentBody: note.body });
+  }
+
+  processChanged(newNotes){
+    this.setState({  
+      notes: newNotes,  selectedId: '',  currentBody: 'New note ...'
+    });
+    localStorage.setItem(KEY, JSON.stringify(newNotes));
   }
 
   generateGUID() {
@@ -77,7 +90,6 @@ class App extends Component {
       <div className="App container">
         <h1>Markdown Note Manager</h1>
         <div className='row'>
-          {console.log('render')}
           <Sidebar add={this.addNote} 
                    select={this.selectNote}
                    notes={this.state.notes}
