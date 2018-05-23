@@ -12,7 +12,7 @@ class App extends Component {
     const localNotes = JSON.parse(localStorage.getItem(KEY));
     this.state = {
       notes: localNotes ? localNotes : [],
-      selectedNote: '',
+      selectedId: '',
       currentBody: ''
     }
 
@@ -27,20 +27,33 @@ class App extends Component {
 
   }
 
-  updateNote() {
-
+  updateNote(body) {
+    console.log(body);
+    this.setState({ currentBody: body })
   }
 
   save() {
+    let body = this.state.currentBody.trim();
+    if (body.length === 0)  return;
+    if(this.state.selectedId) {
 
+    } else {
+      const guid = this.generateGUID();
+      const newNote = { id: guid, body: this.state.currentBody }
+      const newNotes = this.state.notes;
+      newNotes.push(newNote);
+      this.setState({ notes: newNotes })
+    }
+    this.setState({ selectedId: '', currentBody: '' })
+    localStorage.setItem(KEY, JSON.stringify(this.state.notes));
   }
 
   delete() {
 
   }
 
-  selectNote() {
-
+  selectNote(note) {
+    this.setState({ selectedId: note.id,  currentBody: note.body });
   }
 
   generateGUID() {
@@ -57,8 +70,8 @@ class App extends Component {
       <div className="App container">
         <h1>Markdown Note Manager</h1>
         <div className='row'>
+          {console.log('render')}
           <Sidebar add={this.addNote} 
-                   update={this.updateNote}
                    select={this.selectNote}
                    nodes={this.state.nodes} />
           <Editor handleChange={this.updateNote}

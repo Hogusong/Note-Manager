@@ -5,7 +5,9 @@ class Editor extends Component {
   render() {
     return (
       <div className="editor column column-75">
-        <SimpleMDE />
+        <SimpleMDE onChange={this.props.handleChange}
+                   value={this.props.currentBody} 
+                   option={{ autofocus: true }}/>
       </div>
     );
   }
