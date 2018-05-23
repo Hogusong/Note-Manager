@@ -35,16 +35,23 @@ class App extends Component {
   save() {
     let body = this.state.currentBody.trim();
     if (body.length === 0)  return;
+    let newNotes = this.state.notes;
     if(this.state.selectedId) {
-
+      const noteIndex = this.state.notes.findIndex(note => 
+              (note.id === this.state.selectedId)
+      );
+      if (noteIndex === -1) return;
+      newNotes[noteIndex].body = body;
     } else {
       const guid = this.generateGUID();
       const newNote = { id: guid, body: this.state.currentBody }
-      const newNotes = this.state.notes;
       newNotes.push(newNote);
-      this.setState({ notes: newNotes })
     }
-    this.setState({ selectedId: '', currentBody: '' })
+    this.setState({ 
+      notes: newNotes,
+      selectedId: '', 
+      currentBody: ''
+    });
     localStorage.setItem(KEY, JSON.stringify(this.state.notes));
   }
 
@@ -73,7 +80,8 @@ class App extends Component {
           {console.log('render')}
           <Sidebar add={this.addNote} 
                    select={this.selectNote}
-                   nodes={this.state.nodes} />
+                   notes={this.state.notes}
+                   selectedId={this.state.selectedId} />
           <Editor handleChange={this.updateNote}
                   currentBody={this.state.currentBody} />
         </div>
