@@ -28,7 +28,6 @@ class App extends Component {
   }
 
   updateNote(body) {
-    console.log(body);
     this.setState({ currentBody: body })
   }
 

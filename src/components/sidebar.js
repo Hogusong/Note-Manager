@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import '../css/sidebar.css';
 
 class Sidebar extends Component {
   renderList() {
@@ -8,7 +7,7 @@ class Sidebar extends Component {
       list.push(
         <li key={note.id} onClick={() => this.props.select(note)}
             className={note.id === this.props.selectedId ? 'selected' : ''} >
-          {note.body.substring(0,24)}
+          {note.body}
         </li>
       )
     });
